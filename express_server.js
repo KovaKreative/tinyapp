@@ -9,23 +9,53 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const generateRandomString = function() {
+  let output = '';
+
+  const numbers = [48, 57];
+  const letters = [65, 90];
+
+  while (output.length < 6) {
+    const number = Math.random() < 0.3;
+    let range = number ? numbers : letters; 
+    let code = Math.round(Math.random() * (range[1] - range[0]) + range[0]);
+    let temp = String.fromCharCode(code);
+    const capital = number ? false : Math.random() > 0.5;
+    temp = capital ? temp.toUpperCase() : temp.toLowerCase();
+    output += temp;
+  }
+  return output;
+};
+
+
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/urls', (req, res) => {
+  urlDatabase[generateRandomString()] = req.body.longURL;
+  console.log(urlDatabase);
+});
+
 app.get('/', (req, res) => {
   res.send("Hello!");
 });
 
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
-})
+});
 
 app.get('/urls', (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
-})
+});
+
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
 
 app.get('/urls/:id', (req, res) => {
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id] };
   res.render("urls_show", templateVars);
-})
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
