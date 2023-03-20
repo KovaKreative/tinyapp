@@ -17,7 +17,7 @@ const generateRandomString = function() {
 
   while (output.length < 6) {
     const number = Math.random() < 0.3;
-    let range = number ? numbers : letters; 
+    let range = number ? numbers : letters;
     let code = Math.round(Math.random() * (range[1] - range[0]) + range[0]);
     let temp = String.fromCharCode(code);
     const capital = number ? false : Math.random() > 0.5;
@@ -27,12 +27,24 @@ const generateRandomString = function() {
   return output;
 };
 
-
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/urls', (req, res) => {
-  urlDatabase[generateRandomString()] = req.body.longURL;
+  const key = generateRandomString();
+  if (!urlDatabase[key]) {
+    urlDatabase[key] = req.body.longURL;
+  }
+  res.redirect(`/urls/${key}`);
   console.log(urlDatabase);
+});
+
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id];
+  if (!longURL) {
+    res.send("Tiny URL not found. Sorry, pal.");
+    return;
+  }
+  res.redirect(longURL);
 });
 
 app.get('/', (req, res) => {
