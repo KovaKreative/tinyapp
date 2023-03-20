@@ -38,6 +38,15 @@ app.post('/urls', (req, res) => {
   console.log(urlDatabase);
 });
 
+app.post('/urls/:id/delete', (req, res) => {
+  const id = req.params.id;
+  if (urlDatabase[id]) {
+    delete urlDatabase[id];
+  }
+  res.redirect(`/urls`);
+  console.log(urlDatabase);
+});
+
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
   if (!longURL) {
