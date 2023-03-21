@@ -35,7 +35,6 @@ app.post('/urls', (req, res) => {
     urlDatabase[key] = req.body.longURL;
   }
   res.redirect(`/urls/${key}`);
-  console.log(urlDatabase);
 });
 
 app.post('/urls/:id/delete', (req, res) => {
@@ -44,7 +43,12 @@ app.post('/urls/:id/delete', (req, res) => {
     delete urlDatabase[id];
   }
   res.redirect(`/urls`);
-  console.log(urlDatabase);
+});
+
+app.post('/urls/:id/update', (req, res) => {
+  const id = req.body;
+  console.log(req.body);
+  //res.redirect(`/urls/${id}`);
 });
 
 app.get("/u/:id", (req, res) => {
