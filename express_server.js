@@ -59,6 +59,12 @@ app.post('/urls/:id', (req, res) => {
   res.redirect(`/urls/${id}`);
 });
 
+//CREATE
+app.post('/register', (req, res) => {
+  const userName = req.body.userName;
+  res.cookie(`username`, userName).redirect(`/urls`);
+});
+
 // EDIT
 app.post('/login', (req, res) => {
   const userName = req.body.userName;
@@ -83,7 +89,10 @@ app.get("/u/:id", (req, res) => {
 app.get('/', (req, res) => {
   console.log("Cookies: ", req.cookies);
   console.log("Cookies: ", req.signedCookies);
+});
 
+app.get('/register', (req, res) => {
+  res.render("urls_register", { username: undefined });
 });
 
 // BROWSE
