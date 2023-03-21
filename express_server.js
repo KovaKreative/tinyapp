@@ -62,13 +62,11 @@ app.post('/urls/:id', (req, res) => {
 // EDIT
 app.post('/login', (req, res) => {
   const userName = req.body.userName;
-  res.cookie(`username`, userName);
-  res.redirect(`/urls`);
+  res.cookie(`username`, userName).redirect(`/urls`);
 });
 
 app.post('/logout', (req, res) => {
-  res.clearCookie(`username`);
-  res.redirect(`/urls`);
+  res.clearCookie(`username`).redirect(`/urls`);
 });
 
 // REDIRECT - GO TO SITE
@@ -85,6 +83,7 @@ app.get("/u/:id", (req, res) => {
 app.get('/', (req, res) => {
   console.log("Cookies: ", req.cookies);
   console.log("Cookies: ", req.signedCookies);
+
 });
 
 // BROWSE
