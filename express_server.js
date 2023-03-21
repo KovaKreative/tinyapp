@@ -40,7 +40,7 @@ app.post('/urls', (req, res) => {
 });
 
 // DELETE
-app.post('/urls/:id/delete', (req, res) => {
+app.post('/urls/delete/:id', (req, res) => {
   const id = req.params.id;
   if (urlDatabase[id]) {
     delete urlDatabase[id];
