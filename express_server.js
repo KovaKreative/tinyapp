@@ -29,14 +29,17 @@ const generateRandomString = function() {
 
 app.use(express.urlencoded({ extended: true }));
 
+// CREATE
 app.post('/urls', (req, res) => {
   const key = generateRandomString();
-  if (!urlDatabase[key]) {
-    urlDatabase[key] = req.body.longURL;
+  while (Object.prototype.hasOwnProperty(key)) {
+    key = generateRandomString();
   }
+  urlDatabase[key] = req.body.longURL;
   res.redirect(`/urls/${key}`);
 });
 
+// DELETE
 app.post('/urls/:id/delete', (req, res) => {
   const id = req.params.id;
   if (urlDatabase[id]) {
@@ -45,12 +48,16 @@ app.post('/urls/:id/delete', (req, res) => {
   res.redirect(`/urls`);
 });
 
-app.post('/urls/:id/update', (req, res) => {
-  const id = req.body;
-  console.log(req.body);
-  //res.redirect(`/urls/${id}`);
+// EDIT
+app.post('/urls/:id', (req, res) => {
+  const id = req.params.id;
+  const longURL = req.body.longURL;
+  urlDatabase[id] = longURL;
+  console.log(urlDatabase);
+  res.redirect(`/urls/${id}`);
 });
 
+// REDIRECT - GO TO SITE
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
   if (!longURL) {
@@ -64,19 +71,23 @@ app.get('/', (req, res) => {
   res.send("Hello!");
 });
 
+// BROWSE
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
 });
 
+// BROWSE
 app.get('/urls', (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 
+// READ
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+// READ
 app.get('/urls/:id', (req, res) => {
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id] };
   res.render("urls_show", templateVars);
