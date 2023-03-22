@@ -21,12 +21,14 @@
                   <%= urls[id] %>
                 </td>
                 <td>
-                  <form method="GET" action="/urls/<%= id %>"><button type="submit"
-                      class="btn btn-outline-primary">Edit</button></form>
+                  <!-- <form method="GET" action="/urls/<%= id %>"> -->
+                    <a href="/urls/<%= id %>" class="btn btn-outline-primary">Edit</a>
+                  <!-- </form> -->
                 </td>
                 <td>
-                  <form method="POST" action="/urls/delete/<%= id %>"><button type="submit"
-                      class="btn btn-outline-danger">Delete</button></form>
+                  <form method="POST" action="/urls/delete/<%= id %>">
+                    <button type="submit" class="btn btn-outline-danger">Delete</button>
+                  </form>
                 </td>
               </tr>
               <% } %>

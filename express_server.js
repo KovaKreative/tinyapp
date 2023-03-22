@@ -96,13 +96,14 @@ app.post('/register', (req, res) => {
 
 // EDIT - LOGIN
 app.post('/login', (req, res) => {
+  console.log(req.body);
   const user = getUserByEmail(req.body.email);
-  if(!user) {
-    res.redirect('/register'); // TO DO: Change to invalid login
+  if(user && user.password === req.body.password){
+    res.cookie(`id`, user.id).redirect(`/urls`);
+    res.redirect('/urls'); // TO DO: Change to invalid login
     return;
   }
-  const userName = req.body.userName;
-  res.cookie(`id`, userName).redirect(`/urls`);
+  res.redirect('/register'); // TO DO: Change to invalid login
 });
 
 //LOGOUT
