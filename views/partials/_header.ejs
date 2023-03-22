@@ -32,15 +32,16 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <% if(username){ %>
+    <% if(email){ %>
       <form class="form-inline" method="POST" action="/logout">
-        <label><%= username %></label>
+        <label><%= email %></label>
         <button class="btn btn-outline-dark ml-2">Log Out</button>
       </form>
     <% } else { %>
       <form class="form-inline" method="POST" action="/login">
-        <input class="form-control" type="text" name="userName" placeholder="username">
-        <button class="btn btn-outline-dark ml-2">Log In</button>
+        <input class="form-control mr-2" type="email" name="email" placeholder="email">
+        <input class="form-control mr-2" type="password" name="password" placeholder="password">
+        <button class="btn btn-outline-dark">Log In</button>
       </form>
     <% } %>
   </nav>
