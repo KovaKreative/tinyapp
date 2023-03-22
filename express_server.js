@@ -159,7 +159,7 @@ app.get('/urls', (req, res) => {
     req.session = null;
     res.redirect("/login");
   }
-  const userURLs = fetchUserURLs(user.id, urlDatabase);
+  const userURLs = fetchUserURLs(urlDatabase, user.id);
   const templateVars = {
     email: user ? user.email : undefined,
     urls: userURLs
