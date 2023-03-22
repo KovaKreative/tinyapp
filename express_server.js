@@ -47,6 +47,11 @@ const generateRandomString = function(digits) {
 
 // CREATE
 app.post('/urls', (req, res) => {
+  const user = getUser(req.cookies['id']);
+  if(!user){
+    res.status(403).render('urls_error', { email: undefined, message: "You cannot generate a new tiny URL without an account. Please Log in or Register." });
+    return;
+  }
   const key = generateRandomString();
   while (Object.prototype.hasOwnProperty(key)) {
     key = generateRandomString(6);
@@ -109,7 +114,6 @@ app.post('/login', (req, res) => {
   const user = getUserByEmail(req.body.email);
   if(user && user.password === req.body.password){
     res.cookie(`id`, user.id).redirect(`/urls`);
-    res.redirect('/urls');
     return;
   }
   res.status(403).render('urls_error', { email: undefined, message: "Your email and/or password does not match our records." });
@@ -127,7 +131,7 @@ app.post('/logout', (req, res) => {
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
   if (!longURL) {
-    res.send("Tiny URL not found. Sorry, pal.");
+    res.status(404).render('urls_error', { email: undefined, message: "Short URL not recognized." });
     return;
   }
   res.redirect(longURL);
@@ -140,10 +144,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
+  const user = getUser(req.cookies['id']);
+  if(user){
+    res.redirect('/urls');
+    return;
+  }
   res.render("urls_register", { email: undefined });
 });
 
 app.get('/login', (req, res) => {
+  const user = getUser(req.cookies['id']);
+
+  if(user){
+    res.redirect('/urls');
+    return;
+  }
   res.render("urls_login", { email: undefined });
 });
 
@@ -157,7 +172,6 @@ app.get('/urls.json', (req, res) => {
 // BROWSE
 app.get('/urls', (req, res) => {
   const user = getUser(req.cookies['id']);
-  console.log(users);
   const templateVars = {
     email: user ? user.email : undefined,
     urls: urlDatabase
@@ -168,6 +182,10 @@ app.get('/urls', (req, res) => {
 // READ
 app.get("/urls/new", (req, res) => {
   const user = getUser(req.cookies['id']);
+  if(!user){
+    res.redirect('/login');
+    return;
+  }
   const templateVars = {
     email: user ? user.email : undefined,
   };
