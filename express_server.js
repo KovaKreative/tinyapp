@@ -94,6 +94,11 @@ app.post('/register', (req, res) => {
     res.status(400).render('urls_error', { email: undefined, message: "The email and password fields cannot be blank." });
     return;
   }
+  existingUser = getUserByEmail(email);
+  if(existingUser) {
+    res.status(400).render('urls_error', { email: undefined, message: "An account with that email address already exists." });
+    return;
+  }
   users[id] = { id, email, password };
   res.cookie(`id`, id).redirect(`/urls`);
 });
