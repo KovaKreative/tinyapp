@@ -1,5 +1,5 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 
 const { SmallURL, User, userDatabase, urlDatabase } = require('./database');
@@ -10,7 +10,7 @@ const PORT = 8080; // default port 8080
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieSession({ name: 'session', keys: ['lazyEgg'], maxAge: 24 * 60* 60 * 1000 }));
 
 
 
@@ -18,13 +18,12 @@ app.use(cookieParser());
 
 // CREATE NEW small URL
 app.post('/urls', (req, res) => {
-  const user = getUser(userDatabase, req.cookies['id']);
+  const user = getUser(userDatabase, req.session.user_id);
   if (!user) {
     res.status(403).render('urls_error', { email: undefined, message: "You cannot generate a new tiny URL without an account. Please Log in or Register." });
     return;
   }
   const urlID = generateRandomString(6);
-  console.log(urlID);
   while (Object.prototype.hasOwnProperty(urlID)) {
     urlID = generateRandomString(6);
   }
@@ -36,7 +35,7 @@ app.post('/urls', (req, res) => {
 
 // DELETE small URL
 app.post('/urls/delete/:id', (req, res) => {
-  const userID = req.cookies['id'];
+  const userID = req.session.user_id;
   const user = getUser(userDatabase, userID);
   if (!user) {
     return res.status(400).render('urls_error', { email: undefined, message: "You are not signed in." });
@@ -64,7 +63,6 @@ app.post('/urls/:id', (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
   urlDatabase[id].longURL = longURL;
-  console.log(urlDatabase);
   res.redirect(`/urls/${id}`);
 });
 
@@ -83,7 +81,8 @@ app.post('/register', (req, res) => {
   }
   const encryptedPassword = bcrypt.hashSync(password);
   userDatabase[id] = new User(id, email, encryptedPassword);
-  res.cookie(`id`, id).redirect(`/urls`);
+  req.session.user_id = id;
+  res.redirect(`/urls`);
 });
 
 // EDIT login in formation with an existing used in the registry
@@ -92,7 +91,8 @@ app.post('/login', (req, res) => {
   const pass = req.body.password;
 
   if (user && bcrypt.compareSync(pass, user.password)) {
-    res.cookie(`id`, user.id).redirect(`/urls`);
+    req.session.user_id = user.id;
+    res.redirect('/urls');
     return;
   }
   res.status(403).render('urls_error', { email: undefined, message: "Your email and/or password does not match our records." });
@@ -100,9 +100,9 @@ app.post('/login', (req, res) => {
 
 // DELETE cookie information from client's computer
 app.post('/logout', (req, res) => {
-  res.clearCookie(`id`).redirect(`/login`);
+  req.session = null;
+  res.redirect(`/login`);
 });
-
 
 //GET
 
@@ -118,7 +118,7 @@ app.get("/u/:id", (req, res) => {
 
 // READ tinyApp and go to the main page
 app.get('/', (req, res) => {
-  const user = getUser(userDatabase, req.cookies['id']);
+  const user = getUser(userDatabase, req.session.user_id);
   if (user) {
     res.redirect('/urls');
     return;
@@ -128,7 +128,7 @@ app.get('/', (req, res) => {
 
 // READ registration form
 app.get('/register', (req, res) => {
-  const user = getUser(userDatabase, req.cookies['id']);
+  const user = getUser(userDatabase, req.session.user_id);
   if (user) {
     res.redirect('/urls');
     return;
@@ -138,7 +138,7 @@ app.get('/register', (req, res) => {
 
 // READ login form
 app.get('/login', (req, res) => {
-  const user = getUser(userDatabase, req.cookies['id']);
+  const user = getUser(userDatabase, req.session.user_id);
 
   if (user) {
     res.redirect('/urls');
@@ -154,12 +154,12 @@ app.get('/urls.json', (req, res) => {
 
 // BROWSE the list of URLs
 app.get('/urls', (req, res) => {
-  const user = getUser(userDatabase, req.cookies['id']);
+  const user = getUser(userDatabase, req.session.user_id);
   if (!user) {
-    res.clearCookie(`id`).redirect("/login");
+    req.session = null;
+    res.redirect("/login");
   }
   const userURLs = fetchUserURLs(user.id, urlDatabase);
-  console.log(userURLs);
   const templateVars = {
     email: user ? user.email : undefined,
     urls: userURLs
@@ -169,7 +169,7 @@ app.get('/urls', (req, res) => {
 
 // READ new URL form
 app.get("/urls/new", (req, res) => {
-  const user = getUser(userDatabase, req.cookies['id']);
+  const user = getUser(userDatabase, req.session.user_id);
   if (!user) {
     res.redirect('/login');
     return;
@@ -182,7 +182,7 @@ app.get("/urls/new", (req, res) => {
 
 // READ individual entry for a tinyApp URL
 app.get('/urls/:id', (req, res) => {
-  const userID = req.cookies['id'];
+  const userID = req.session.user_id;
   const user = getUser(userDatabase, userID);
   if (!user) {
     return res.status(400).render('urls_error', { email: undefined, message: "You are not signed in." });
