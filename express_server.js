@@ -65,7 +65,7 @@ const getUserByEmail = function(email) {
       return users[id];
     }
   }
-  return undefined;
+  return null;
 }
 
 // DELETE
@@ -90,6 +90,10 @@ app.post('/urls/:id', (req, res) => {
 app.post('/register', (req, res) => {
   id = generateRandomString(4);
   const { email, password } = req.body;
+  if(!email || !password) {
+    res.render('urls_error', { email: undefined, message: "The email and password fields cannot be blank." });
+    return;
+  }
   users[id] = { id, email, password };
   res.cookie(`id`, id).redirect(`/urls`);
 });
@@ -100,10 +104,10 @@ app.post('/login', (req, res) => {
   const user = getUserByEmail(req.body.email);
   if(user && user.password === req.body.password){
     res.cookie(`id`, user.id).redirect(`/urls`);
-    res.redirect('/urls'); // TO DO: Change to invalid login
+    res.redirect('/urls');
     return;
   }
-  res.redirect('/register'); // TO DO: Change to invalid login
+  res.render('urls_error', { email: undefined, message: "Your email and/or password does not match our records." });
 });
 
 //LOGOUT
