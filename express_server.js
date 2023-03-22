@@ -1,5 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
 
 const { SmallURL, User, userDatabase, urlDatabase } = require('./database');
 const { getUser, getUserByEmail, fetchUserURLs, generateRandomString } = require('./functions');
@@ -50,7 +51,7 @@ app.post('/urls/delete/:id', (req, res) => {
   if (shortLinkItem.userID !== userID) {
     return res.status(403).render('urls_error', { email: user.email, message: "You do not have permission to delete this short link." });
   }
-  
+
   const id = req.params.id;
   if (urlDatabase[id]) {
     delete urlDatabase[id];
@@ -80,15 +81,17 @@ app.post('/register', (req, res) => {
     res.status(400).render('urls_error', { email: undefined, message: "An account with that email address already exists." });
     return;
   }
-  userDatabase[id] = new User(id, email, password);
+  const encryptedPassword = bcrypt.hashSync(password);
+  userDatabase[id] = new User(id, email, encryptedPassword);
   res.cookie(`id`, id).redirect(`/urls`);
 });
 
 // EDIT login in formation with an existing used in the registry
 app.post('/login', (req, res) => {
-  console.log(req.body);
   const user = getUserByEmail(userDatabase, req.body.email);
-  if (user && user.password === req.body.password) {
+  const pass = req.body.password;
+
+  if (user && bcrypt.compareSync(pass, user.password)) {
     res.cookie(`id`, user.id).redirect(`/urls`);
     return;
   }
