@@ -11,7 +11,7 @@ const getUserByEmail = function(object, email) {
   return null;
 };
 
-const fetchUserURLs = function(userID, urlList) {
+const fetchUserURLs = function(urlList, userID) {
   const output = {};
   for (const id in urlList) {
     if (userID === urlList[id].userID) {
