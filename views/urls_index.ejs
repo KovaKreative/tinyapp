@@ -1,7 +1,16 @@
-  <%- include('partials/_header', { title: "TinyApp" }) %>
-    <main style="margin: 1em;">
-      <div class="container">
-        <h3>My URLs</h3>
+<%- include('partials/_header', { title: "TinyApp" }) %>
+  <main style="margin: 1em;">
+    <div class="container">
+      <h3>My URLs</h3>
+
+      <% if(!Object.keys(urls).length) { %>
+
+        <div class="d-flex justify-content-center">
+          <p class="lead mt-3">You do not have any small URLs. <a href="/urls/new">Create one now!</a></p>
+          
+        </div>
+
+      <% } else { %>
         <table class="table">
           <thead>
             <tr>
@@ -18,11 +27,11 @@
                   <%= id %>
                 </td>
                 <td>
-                  <%= urls[id] %>
+                  <%= urls[id].longURL %>
                 </td>
                 <td>
                   <!-- <form method="GET" action="/urls/<%= id %>"> -->
-                    <a href="/urls/<%= id %>" class="btn btn-outline-primary">Edit</a>
+                  <a href="/urls/<%= id %>" class="btn btn-outline-primary">Edit</a>
                   <!-- </form> -->
                 </td>
                 <td>
@@ -34,6 +43,7 @@
               <% } %>
           </tbody>
         </table>
-      </div>
-    </main>
-    <%- include('partials/_footer') %>
+      <% } %>
+    </div>
+  </main>
+  <%- include('partials/_footer') %>
