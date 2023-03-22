@@ -23,27 +23,6 @@ const userDatabase = {
   user2RandomID: new User("user2RandomID", "user2@example.com", "dishwasherfunk")
 };
 
-const getUser = function(object, id) {
-  return object[id];
-}
 
-const getUserByEmail = function(object, email) {
-  for(const id in object) {
-    if(object[id]['email'] === email) {
-      return object[id];
-    }
-  }
-  return null;
-}
 
-const fetchUserURLs = function(userID, urlList) {
-  const output = {};
-  for(const id in urlList) {
-    if(userID === urlList[id].userID) {
-      output[id] = urlList[id];
-    }
-  }
-  return output;
-}
-
-module.exports = { SmallURL, User, userDatabase, urlDatabase, getUser, getUserByEmail, fetchUserURLs };
+module.exports = { SmallURL, User, userDatabase, urlDatabase };
