@@ -197,9 +197,12 @@ app.post('/register', (req, res) => {
   res.redirect(`/urls`);
 });
 
-// DEFAULT PATH - If the user is signed in, it'll redirect to their urls, otherwise render the login form (READ)
+// DEFAULT PATH - Redirects to /login
 app.get('/', (req, res) => {
+  res.redirect('/login');
+});
 
+app.get('/login', (rec, res) => {
   const user = getUser(userDatabase, req.session.user_id);
 
   if (user) {
@@ -226,7 +229,7 @@ app.post('/login', (req, res) => {
 // Log Out - remove cookie information from client's computer (DELETE)
 app.post('/logout', (req, res) => {
   req.session = null;
-  res.redirect(`/`);
+  res.redirect(`/login`);
 });
 
 // BROWSE **For testing purposes, not for deployment of a website
