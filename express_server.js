@@ -114,13 +114,9 @@ app.get('/urls/:id', (req, res) => {
 
 // EDIT long URL on an existing entry
 app.put('/urls/:id', (req, res) => {
-
-  const id = req.params.id;
-  const longURL = req.body.longURL;
+  const { id, longURL } = req.params;
   SmallURL.updateLongURL(urlDatabase[id], longURL);
-
   res.redirect(`/urls/${id}`);
-
 });
 
 // DELETE small URL from database
@@ -128,18 +124,17 @@ app.delete('/urls/delete/:id', (req, res) => {
 
   const userID = req.session.user_id;
   const user = getUser(userDatabase, userID);
-  const shortLinkItem = urlDatabase[req.params.id];
+  const urlID = req.params.id;
+  const shortLinkItem = urlDatabase[urlID];
 
   const actionDenied = invalidatePost(user, shortLinkItem);
   if (actionDenied) {
     return res.status(actionDenied.code).render('urls_error', { email: undefined, message: actionDenied.message });
   }
 
-  const id = req.params.id;
+  delete urlDatabase[urlID];
 
-  if (urlDatabase[id]) {
-    delete urlDatabase[id];
-  }
+  saveData(urlDatabase, "urlDatabase");
 
   res.redirect(`/urls`);
 });
@@ -153,15 +148,13 @@ app.get("/u/:id", (req, res) => {
     return res.status(404).render('urls_error', { email: undefined, message: "Short URL not recognized." });
   }
 
-  let visitorID = generateRandomString(4);
+  let visitorID = req.session.visitor_id ? req.session.visitor_id : generateRandomString(4);
 
-  if (req.session.visitor_id) {
-    visitorID = req.session.visitor_id;
-  } else {
+  if (!req.session.visitor_id) {
     req.session.visitor_id = visitorID;
   }
 
-  SmallURL.newVisit(urlDatabase[req.params.id], visitorID, Date.now());
+  SmallURL.newVisit(urlDatabase[req.params.id], visitorID);
   saveData(urlDatabase, "urlDatabase");
 
   res.redirect(longURL);
@@ -241,7 +234,7 @@ app.post('/logout', (req, res) => {
   res.redirect(`/`);
 });
 
-// BROWSE **For testing purposes, not for deployment
+// BROWSE **For testing purposes, not for deployment of a website
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
 });

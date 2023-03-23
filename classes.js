@@ -1,6 +1,6 @@
 class SmallURL {
-  static newVisit(object, visitorID, time) {
-    object.visits.push(new Visitor(visitorID, time));
+  static newVisit(object, visitorID) {
+    object.visits.push(new Visitor(visitorID, Date.now()));
   }
   static updateLongURL(object, longURL) {
     object.longURL = longURL;
