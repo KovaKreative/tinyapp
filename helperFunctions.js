@@ -49,13 +49,13 @@ const fetchUserURLs = function(urlList, userID) {
 
 const checkIfHasProtocol = function(longURL) {
   const protocols = ["http://", "https://", "ftp://"];
-  for(const protocol of protocols) {
-    if(longURL.startsWith(protocol)){
+  for (const protocol of protocols) {
+    if (longURL.startsWith(protocol)) {
       return true;
     }
   }
   return false;
-}
+};
 
 const invalidatePost = function(user, shortLink) {
   let code = 200;
