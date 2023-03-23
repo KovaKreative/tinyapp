@@ -156,6 +156,7 @@ app.get("/u/:id", (req, res) => {
 });
 
 // USER REQUESTS
+
 // Display registration form (READ)
 app.get('/register', (req, res) => {
 
