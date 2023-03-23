@@ -30,5 +30,6 @@ TinyApp is built with cookie and password encryption middleware, and ensures use
 
 ## Getting Started
 
+- Fork and clone, or download the repo to your machine.
 - Install all dependencies (using the `npm install` command).
 - Run the development web server using the `node express_server.js` command.
