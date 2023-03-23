@@ -1,13 +1,17 @@
 class SmallURL {
+  static newVisit(object, visitorID, time) {
+    object.visits.push(new Visitor(visitorID, time));
+  }
+  static updateLongURL(object, longURL) {
+    object.longURL = longURL;
+  }
+
   constructor(longURL, userID) {
     this.longURL = longURL;
     this.userID = userID;
     this.visits = [];
   }
 
-  newVisit(visitorID, time) {
-    this.visits.push(new Visitor(visitorID, time));
-  }
 }
 
 class User {
