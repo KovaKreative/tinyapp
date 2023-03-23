@@ -18,9 +18,9 @@ const { getUser, getUserByEmail, fetchUserURLs, generateRandomString, checkIfHas
 const urlDatabase = castObjects(loadData('urlDatabase'), SmallURL.prototype);
 const userDatabase = castObjects(loadData('userDatabase'), User.prototype);
 
-//URL REQUESTS
+// URL REQUESTS
 
-// BROWSE the list of URLs
+// Display the list of URLs (BROWSE)
 app.get('/urls', (req, res) => {
 
   const user = getUser(userDatabase, req.session.user_id);
@@ -40,7 +40,7 @@ app.get('/urls', (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-// READ new URL form
+// Display the NEW URL form (READ)
 app.get("/urls/new", (req, res) => {
 
   const user = getUser(userDatabase, req.session.user_id);
@@ -89,7 +89,7 @@ app.post('/urls', (req, res) => {
   res.redirect(`/urls/${urlID}`);
 });
 
-// READ individual page for a tinyApp URL for Editing
+// Display individual page for a tinyApp URL for Editing (READ)
 app.get('/urls/:id', (req, res) => {
 
   const userID = req.session.user_id;
@@ -123,7 +123,7 @@ app.put('/urls/:id', (req, res) => {
 
 });
 
-// DELETE small URL
+// DELETE small URL from database
 app.delete('/urls/delete/:id', (req, res) => {
 
   const userID = req.session.user_id;
@@ -144,7 +144,7 @@ app.delete('/urls/delete/:id', (req, res) => {
   res.redirect(`/urls`);
 });
 
-// READ long URL information and go to that site
+// Redirects to the site associated with the short URL and stores necessary analytic data
 app.get("/u/:id", (req, res) => {
 
   const longURL = urlDatabase[req.params.id].longURL;
@@ -167,8 +167,8 @@ app.get("/u/:id", (req, res) => {
   res.redirect(longURL);
 });
 
-//USER REQUESTS
-// READ registration form
+// USER REQUESTS
+// Display registration form (READ)
 app.get('/register', (req, res) => {
 
   const user = getUser(userDatabase, req.session.user_id);
@@ -180,21 +180,21 @@ app.get('/register', (req, res) => {
   res.render("urls_register", { email: undefined });
 });
 
-//CREATE a new user in the registry
+// CREATE a new user in the registry
 app.post('/register', (req, res) => {
-  
+
   const { email, password } = req.body;
-  
+
   if (!email || !password) {
     return res.status(400).render('urls_error', { email: undefined, message: "The email and password fields cannot be blank." });
   }
-  
+
   const existingUser = getUserByEmail(userDatabase, email);
-  
+
   if (existingUser) {
     return res.status(400).render('urls_error', { email: undefined, message: "An account with that email address already exists." });
   }
-  
+
   const userDigits = 5;
   const userID = generateRandomString(userDigits);
   while (Object.prototype.hasOwnProperty.call(userDatabase, userID)) {
@@ -204,12 +204,12 @@ app.post('/register', (req, res) => {
   const encryptedPassword = bcrypt.hashSync(password);
   userDatabase[userID] = new User(userID, email, encryptedPassword);
   saveData(userDatabase, "userDatabase");
-  
+
   req.session.user_id = userID;
   res.redirect(`/urls`);
 });
 
-// READ - DEFAULT PATH - If the user is signed in, it'll redirect to their urls, otherwise render the login form
+// DEFAULT PATH - If the user is signed in, it'll redirect to their urls, otherwise render the login form (READ)
 app.get('/', (req, res) => {
 
   const user = getUser(userDatabase, req.session.user_id);
@@ -221,7 +221,7 @@ app.get('/', (req, res) => {
   res.render("urls_login", { email: undefined });
 });
 
-// POST login in formation
+// Log Into the user account (CREATE)
 app.post('/login', (req, res) => {
 
   const user = getUserByEmail(userDatabase, req.body.email);
@@ -235,10 +235,10 @@ app.post('/login', (req, res) => {
   res.status(403).render('urls_error', { email: undefined, message: "Your email and/or password does not match our records." });
 });
 
-// POST Log Out - remove cookie information from client's computer
+// Log Out - remove cookie information from client's computer (DELETE)
 app.post('/logout', (req, res) => {
   req.session = null;
-  res.redirect(`/login`);
+  res.redirect(`/`);
 });
 
 // BROWSE **For testing purposes, not for deployment

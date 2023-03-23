@@ -1,56 +1,60 @@
 <%- include('partials/_header', { title: "URL - TinyApp" }) %>
-
-    <div class="container">
-      <div class="card text-center mt-3">
-        <div class="card-header"></div>
-        <div class="card-body">
-          <h5 class="card-title">TinyURL for: <%= longURL %>
-          </h5>
-          <p class="card-text">
-            Short URL ID: <a href="/u/<%= id %>" target="_blank">
-              <%= id %>
-            </a>
-          </p>
-          <p>This URL has been visited <%= visits.length %> times.</p>
-          <% if (visits.length) { %>
-            <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#visitorModal">
-              View Visitors
-            </button>
-            <div class="modal fade" id="visitorModal" tabindex="-1" role="dialog" aria-labelledby="visitorModal" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="visitorModal">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <% for(const visitor of visits) { %>
-                      <h4><%= visitor.visitorId %></h4>
-                      <p><%= new Date(visitor.time) %></p>
-                    <% } %>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
+  <div class="container">
+    <div class="card text-center mt-3">
+      <div class="card-header"></div>
+      <div class="card-body">
+        <h5 class="card-title">TinyURL for: <%= longURL %>
+        </h5>
+        <p class="card-text">
+          Short URL ID: <a href="/u/<%= id %>" target="_blank">
+          <%= id %>
+          </a>
+        </p>
+        <p>This URL has been visited <%= visits.length %> times.</p>
+        <% if (visits.length) { %>
+          <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#visitorModal">
+            View Visitors
+          </button>
+          <div class="modal fade" id="visitorModal" tabindex="-1" role="dialog" aria-labelledby="visitorModal"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="visitorModal">Modal title</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <% for(const visitor of visits) { %>
+                    <h4>
+                      <%= visitor.visitorId %>
+                    </h4>
+                    <p>
+                      <%= new Date(visitor.time) %>
+                    </p>
+                  <% } %>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>
-       
-          <% } %>
-          <h3 class="mb-1">Edit</h3>
-          <form method="POST" class="form" action="/urls/<%= id %>?_method=PUT">
-            <div class="form-group row justify-content-center">
-              <label class="p-2 col-1">New URL:</label>
-              <input class="form-control mr-3 p-1 col-5" type="url" name="longURL" placeholder="http://"
-                value="<%= longURL %>">
-              <button type="submit" class="btn btn-outline-primary col-1 mb-3">Update</button>
-            </div>
-          </form>
+          </div>
 
-        </div>
-        <div class="card-footer text-muted"></div>
+        <% } %>
+            <h3 class="mb-1">Edit</h3>
+            <form method="POST" class="form" action="/urls/<%= id %>?_method=PUT">
+              <div class="form-group row justify-content-center">
+                <label class="p-2 col-1">New URL:</label>
+                <input class="form-control mr-3 p-1 col-5" type="url" name="longURL" placeholder="http://"
+                  value="<%= longURL %>">
+                <button type="submit" class="btn btn-outline-primary col-1 mb-3">Update</button>
+              </div>
+            </form>
+
       </div>
+      <div class="card-footer text-muted"></div>
     </div>
-    <%- include('partials/_footer') %>
+  </div>
+<%- include('partials/_footer') %>
