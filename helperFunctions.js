@@ -58,8 +58,8 @@ const checkIfHasProtocol = function(longURL) {
 }
 
 const invalidatePost = function(user, shortLink) {
-  const code = 200;
-  const message = "";
+  let code = 200;
+  let message = "";
 
   let actionDenied = false;
 
