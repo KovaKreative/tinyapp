@@ -3,11 +3,16 @@ const cookieSession = require('cookie-session');
 const methodOverride = require('method-override');
 const bcrypt = require('bcryptjs');
 
-const { SmallURL, User, userDatabase, urlDatabase } = require('./database');
+const { saveDatabase, loadDatabase } = require('./database');
+const { SmallURL, User } = require('./classes');
 const { getUser, getUserByEmail, fetchUserURLs, generateRandomString, checkIfHasProtocol } = require('./functions');
 
 const app = express();
 const PORT = 8080; // default port 8080
+
+
+const urlDatabase = loadDatabase('urlDatabase');
+const userDatabase = loadDatabase('userDatabase');
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
@@ -70,6 +75,7 @@ app.post('/urls', (req, res) => {
     urlID = generateRandomString(6);
   }
   urlDatabase[urlID] = new SmallURL(req.body.longURL, user.id);
+  saveDatabase(urlDatabase);
   res.redirect(`/urls/${urlID}`);
 });
 
@@ -153,8 +159,6 @@ app.get("/u/:id", (req, res) => {
   res.redirect(longURL);
 });
 
-
-
 //USER REQUESTS
 // READ registration form
 app.get('/register', (req, res) => {
@@ -181,6 +185,7 @@ app.post('/register', (req, res) => {
   }
   const encryptedPassword = bcrypt.hashSync(password);
   userDatabase[id] = new User(id, email, encryptedPassword);
+  saveDatabase(userDatabase);
   req.session.user_id = id;
   res.redirect(`/urls`);
 });
@@ -220,7 +225,6 @@ app.post('/logout', (req, res) => {
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
 });
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
