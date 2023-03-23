@@ -11,7 +11,34 @@
               <%= id %>
             </a>
           </p>
-          <p>This URL has been visited <%= count %> times.</p>
+          <p>This URL has been visited <%= visits.length %> times.</p>
+          <% if (visits.length) { %>
+            <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#visitorModal">
+              View Visitors
+            </button>
+            <div class="modal fade" id="visitorModal" tabindex="-1" role="dialog" aria-labelledby="visitorModal" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="visitorModal">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <% for(const visitor of visits) { %>
+                      <h4><%= visitor.visitorId %></h4>
+                      <p><%= new Date(visitor.time) %></p>
+                    <% } %>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+       
+          <% } %>
           <h3 class="mb-1">Edit</h3>
           <form method="POST" class="form" action="/urls/<%= id %>?_method=PUT">
             <div class="form-group row justify-content-center">

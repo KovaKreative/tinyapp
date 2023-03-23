@@ -11,7 +11,7 @@ const PORT = 8080; // default port 8080
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieSession({ name: 'session', keys: ['lazyEgg'], maxAge: 24 * 60 * 60 * 1000 }));
+app.use(cookieSession({ name: 'session', keys: ['lazyEgg'], maxAge: 365 * 24 * 60 * 60 * 1000 }));
 app.use(methodOverride('_method'));
 
 
@@ -95,8 +95,9 @@ app.get('/urls/:id', (req, res) => {
     email: user ? user.email : undefined,
     id: req.params.id,
     longURL: urlDatabase[req.params.id].longURL,
-    count: urlDatabase[req.params.id].numOfVisits
+    visits: urlDatabase[req.params.id].visits
   };
+  console.log(templateVars);
   res.render("urls_show", templateVars);
 });
 
@@ -135,12 +136,20 @@ app.delete('/urls/delete/:id', (req, res) => {
 
 // READ long URL information and go to that site
 app.get("/u/:id", (req, res) => {
+
   const longURL = urlDatabase[req.params.id].longURL;
   if (!longURL) {
     return res.status(404).render('urls_error', { email: undefined, message: "Short URL not recognized." });
   }
-  console.log(longURL);
-  urlDatabase[req.params.id].newVisit();
+  console.log(req.session);
+  let visitorID = generateRandomString(4);
+  if(req.session.visitor_id) {
+    visitorID = req.session.visitor_id;
+  } else {
+    req.session.visitor_id = visitorID;
+  }
+  urlDatabase[req.params.id].newVisit(visitorID, Date.now());
+  console.log(urlDatabase);
   res.redirect(longURL);
 });
 

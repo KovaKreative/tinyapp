@@ -2,11 +2,11 @@ class SmallURL {
   constructor(longURL, userID) {
     this.longURL = longURL;
     this.userID = userID;
-    this.numOfVisits = 0;
+    this.visits = [];
   }
 
-  newVisit() {
-    this.numOfVisits++;
+  newVisit(visitorID, time) {
+    this.visits.push(new Visitor(visitorID, time));
   }
 }
 
@@ -15,6 +15,13 @@ class User {
     this.id = id;
     this.email = email;
     this.password = password;
+  }
+}
+
+class Visitor {
+  constructor(visitorId, time) {
+    this.visitorId = visitorId;
+    this.time = time;
   }
 }
 
