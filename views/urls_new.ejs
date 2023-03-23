@@ -2,10 +2,11 @@
   <main class="container border d-flex mt-3 p-5">
         <div class="justify-content-center">
           <h3>Create TinyURL</h3>
+          <p>Make sure to include the full URL (e.g. http://..., https://..., etc.)</p>
           <form class="form-inline" action="/urls" method="POST">
             <div class="form-group row justify-content-center mb-2">
               <label class="col" for="longURL">Enter a URL:</label>
-              <input class="form-control col" type="text" name="longURL" placeholder="http://"
+              <input class="form-control col" type="url" name="longURL" placeholder="http://"
                 style="width: 300px; margin: 1em" />
               <button type="submit" class="btn btn-outline-primary col">Submit</button>
             </div>

@@ -13,7 +13,7 @@ app.use(methodOverride('_method'));
 
 const { SmallURL, User } = require('./classes');
 const { saveData, loadData } = require('./databaseFunctions');
-const { getUser, getUserByEmail, fetchUserURLs, generateRandomString, checkIfHasProtocol, castObjects, invalidatePost } = require('./helperFunctions');
+const { getUser, getUserByEmail, fetchUserURLs, generateRandomString, castObjects, invalidatePost } = require('./helperFunctions');
 
 const urlDatabase = castObjects(loadData('urlDatabase'), SmallURL.prototype);
 const userDatabase = castObjects(loadData('userDatabase'), User.prototype);
@@ -66,14 +66,6 @@ app.post('/urls', (req, res) => {
     return res.status(403).render('urls_error', { email: undefined, message: "You cannot generate a new tiny URL without an account. Please Log in or Register." });
   }
 
-  /*
-  I had to include the following check because without a protocol scheme,
-  the redirect function assumes that a given path is a part of the current domain
-  */
-  if (!checkIfHasProtocol(longURL)) {
-    return res.status(400).render('urls_error', { email: user.email, message: "Please make sure to include the full URL (e.g. http://..., https://..., etc)" });
-  }
-
   const idDigits = 6;
   const urlID = generateRandomString(idDigits);
 
@@ -114,8 +106,11 @@ app.get('/urls/:id', (req, res) => {
 
 // EDIT long URL on an existing entry
 app.put('/urls/:id', (req, res) => {
-  const { id, longURL } = req.params;
+  const id = req.params.id;
+  const longURL = req.body.longURL;
+
   SmallURL.updateLongURL(urlDatabase[id], longURL);
+  saveData(urlDatabase, "urlDatabase");
   res.redirect(`/urls/${id}`);
 });
 

@@ -3,6 +3,7 @@ class SmallURL {
     object.visits.push(new Visitor(visitorID, Date.now()));
   }
   static updateLongURL(object, longURL) {
+    console.log(object);
     object.longURL = longURL;
   }
 

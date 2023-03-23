@@ -65,18 +65,3 @@ describe('fetchUserURLs', function() {
   });
 
 });
-
-describe('checkIfHasProtocol', function() {
-
-  it('should return true if URL has protocol scheme', function() {
-    const myURL = checkIfHasProtocol("http://example.com");
-    assert.isTrue(myURL);
-  });
-
-  it('should return false if URL is missing protocol scheme', function() {
-    const myURL = checkIfHasProtocol("www.example.com");
-    assert.isFalse(myURL);
-  });
-
-
-});

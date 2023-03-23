@@ -47,16 +47,6 @@ const fetchUserURLs = function(urlList, userID) {
   return output;
 };
 
-const checkIfHasProtocol = function(longURL) {
-  const protocols = ["http://", "https://", "ftp://"];
-  for (const protocol of protocols) {
-    if (longURL.startsWith(protocol)) {
-      return true;
-    }
-  }
-  return false;
-};
-
 const invalidatePost = function(user, shortLink) {
   let code = 200;
   let message = "";
@@ -85,4 +75,4 @@ const invalidatePost = function(user, shortLink) {
   return actionDenied;
 };
 
-module.exports = { getUser, getUserByEmail, fetchUserURLs, generateRandomString, checkIfHasProtocol, castObjects, invalidatePost };
+module.exports = { getUser, getUserByEmail, fetchUserURLs, generateRandomString, castObjects, invalidatePost };

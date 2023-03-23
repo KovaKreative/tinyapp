@@ -12,7 +12,7 @@
         </p>
         <p>This URL has been visited <%= visits.length %> times.</p>
         <% if (visits.length) { %>
-          <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#visitorModal">
+          <button type="button" class="btn btn-outline-info mb-4" data-toggle="modal" data-target="#visitorModal">
             View Visitors
           </button>
           <div class="modal fade" id="visitorModal" tabindex="-1" role="dialog" aria-labelledby="visitorModal"
@@ -20,14 +20,14 @@
             <div class="modal-dialog modal-dialog-scrollable" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="visitorModal">Modal title</h5>
+                  <h5 class="modal-title" id="visitorModal">Visitors</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
                   <% for(const visitor of visits) { %>
-                    <h4>
+                    <h4>Unique ID: 
                       <%= visitor.visitorId %>
                     </h4>
                     <p>
