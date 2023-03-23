@@ -16,6 +16,9 @@ const generateRandomString = function(digits = 1) {
   return output;
 };
 
+// JSON stores classes as regular objects and can't acommodate methods
+// so once we parse our data from the file, we need to then filter it through this function
+// to ensure that our users and URLs belong to their respective classes
 const castObjects = function(objectList, castPrototype) {
   let buffer = {};
   for (const key in objectList) {
