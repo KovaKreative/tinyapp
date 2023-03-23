@@ -11,8 +11,9 @@
               <%= id %>
             </a>
           </p>
+          <p>This URL has been visited <%= count %> times.</p>
           <h3 class="mb-1">Edit</h3>
-          <form method="POST" class="form" action="/urls/<%= id %>">
+          <form method="POST" class="form" action="/urls/<%= id %>?_method=PUT">
             <div class="form-group row justify-content-center">
               <label class="p-2 col-1">New URL:</label>
               <input class="form-control mr-3 p-1 col-5" type="url" name="longURL" placeholder="http://"

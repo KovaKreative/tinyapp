@@ -2,6 +2,11 @@ class SmallURL {
   constructor(longURL, userID) {
     this.longURL = longURL;
     this.userID = userID;
+    this.numOfVisits = 0;
+  }
+
+  newVisit() {
+    this.numOfVisits++;
   }
 }
 
@@ -22,7 +27,5 @@ const userDatabase = {
   userRandomID: new User("userRandomID", "user@example.com", "purplemonkeydinosaur"),
   user2RandomID: new User("user2RandomID", "user2@example.com", "dishwasherfunk")
 };
-
-
 
 module.exports = { SmallURL, User, userDatabase, urlDatabase };

@@ -39,4 +39,14 @@ const generateRandomString = function(digits = 1) {
   return output;
 };
 
-module.exports = { getUser, getUserByEmail, fetchUserURLs, generateRandomString };
+const checkIfHasProtocol = function(longURL) {
+  const protocols = ["http://", "https://", "ftp://"];
+  for(const protocol of protocols) {
+    if(longURL.startsWith(protocol)){
+      return true;
+    }
+  }
+  return false;
+}
+
+module.exports = { getUser, getUserByEmail, fetchUserURLs, generateRandomString, checkIfHasProtocol };
