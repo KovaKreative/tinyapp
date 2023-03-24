@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 
-const { getUser, getUserByEmail, fetchUserURLs, checkIfHasProtocol } = require('../helperFunctions.js');
+const { getUser, getUserByEmail, fetchUserURLs } = require('../helper-functions.js');
 const { SmallURL } = require('../classes');
 
 const testUsers = {

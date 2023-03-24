@@ -12,8 +12,8 @@ app.use(cookieSession({ name: 'session', keys: ['lazyEgg'], maxAge: 365 * 24 * 6
 app.use(methodOverride('_method'));
 
 const { SmallURL, User } = require('./classes');
-const { saveData, loadData } = require('./databaseFunctions');
-const { getUser, getUserByEmail, fetchUserURLs, generateRandomString, castObjects, invalidatePost } = require('./helperFunctions');
+const { saveData, loadData } = require('./database-functions');
+const { getUser, getUserByEmail, fetchUserURLs, generateRandomString, castObjects, invalidatePost } = require('./helper-functions');
 
 const urlDatabase = castObjects(loadData('urlDatabase'), SmallURL.prototype);
 const userDatabase = castObjects(loadData('userDatabase'), User.prototype);
@@ -203,7 +203,7 @@ app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-app.get('/login', (rec, res) => {
+app.get('/login', (req, res) => {
   const user = getUser(userDatabase, req.session.user_id);
 
   if (user) {

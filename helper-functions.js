@@ -108,14 +108,10 @@ const invalidatePost = function(user, shortLink) {
   if (!user) {
     code = 400;
     message = "You are not signed in.";
-  }
-
-  if (!shortLink) {
+  } else if (!shortLink) {
     code = 404;
     message = "Short link not found.";
-  }
-
-  if (shortLink.userID !== user.id) {
+  } else if (shortLink.userID !== user.id) {
     code = 403;
     message = "Permission denied.";
   }
