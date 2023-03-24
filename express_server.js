@@ -46,7 +46,7 @@ app.get("/urls/new", (req, res) => {
   const user = getUser(userDatabase, req.session.user_id);
 
   if (!user) {
-    return res.redirect('/');
+    return res.status(400).render('urls_error', { email: undefined, message: "You cannot view a list of URLs when not signed in." });
   }
 
   const templateVars = {
